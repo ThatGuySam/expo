@@ -1,0 +1,75 @@
+---
+title: How to add support for macOS and tvOS
+sidebar_title: Supporting macOS and tvOS
+description: Learn how to add support for macOS and tvOS platforms.
+---
+
+import { Step } from '~/ui/components/Step';
+
+<Step label="1">
+
+### Make sure your module's `expo-module.config.json` uses the `"apple"` platform
+
+Expo SDK 50 introduced a universal `"apple"` platform to indicate that the module supports any of the Apple platform.
+If you have used `"ios"` before, you can safely replace it.
+
+```diff expo-module.config.json
+{
+-   "platforms": ["ios"],
+-   "ios": {
+-     "modules": ["MyModule"]
+-   }
++   "platforms": ["apple"],
++   "apple": {
++     "modules": ["MyModule"]
++   }
+}
+```
+
+</Step>
+<Step label="2">
+
+### Update the podspec to declare support for other platforms
+
+```diff Module's podspec
+- s.platform       = :ios, '13.4'
++ s.platforms = {
++   :ios => '13.4',
++   :tvos => '13.4',
++   :osx => '10.15'
++ }
+```
+
+</Step>
+
+<Step label="3">
+
+### Set up `react-native-macos` or `react-native-tvos` in the app
+
+If you are writing a local module, your app is probably already set up. Otherwise, you
+If you are writing a standalone (non-local) module, you may want to set up the example app to support these platforms.
+
+- **For macOS**: follow the official [Install React Native for macOS](https://microsoft.github.io/react-native-windows/docs/rnm-getting-started#install-the-macos-extension) guide from `react-native-macos` documentation.
+- **For tvOS**: follow the instructions in the [react-native-tvos](https://github.com/react-native-tvos/react-native-tvos) repository.
+
+</Step>
+<Step label="4">
+
+### Review the code for using APIs not supported on these platforms
+
+Platform APIs may differ between Apple platforms. The most noticeable difference comes from using different UI frameworks – `UIKit` on iOS and tvOS, `AppKit` on macOS.
+
+Both `react-native-macos` and `expo-modules-core` provide some aliases and polyfills so that you can reference to `UIKit` classes on macOS target (for example `UIView` is an alias to `NSView`, `UIApplication` is an alias to `NSApplication`),
+but it's usually not enough for iOS-first libraries to support other platforms out of the box. You may need to write conditionally compiled code that uses different implementations depending on the platform.
+
+```swift
+#if os(iOS)
+  // iOS implementation
+#elseif os(macOS)
+  // macOS implementation
+#elseif os(tvOS)
+  // tvOS implementation
+#endif
+```
+
+</Step>
