@@ -8,6 +8,7 @@
 
 - Add better error when `metro.config.js` does not extend `expo/metro-config`. ([#26726](https://github.com/expo/expo/pull/26726) by [@EvanBacon](https://github.com/EvanBacon))
 - Add support for GitHub URLs in `expo prebuild --template`. ([#26631](https://github.com/expo/expo/pull/26631) by [@byCedric](https://github.com/byCedric))
+- Add verify-native-assets command. ([#26756](https://github.com/expo/expo/pull/26756) by [@douglowder](https://github.com/douglowder))
 
 ### 🐛 Bug fixes
 
